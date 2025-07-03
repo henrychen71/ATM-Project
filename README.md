@@ -18,6 +18,15 @@ A simple console-based ATM simulation written in C++.
 - Compiled and tested successfully
 - Uploaded initial version to GitHub
 
+### Day 2
+- Added main menu with options for:
+  - Check balance
+  - Deposit
+  - Withdraw
+- Used reference passing for modifying account balance
+- Improved code formatting and fixed typos
+- Compiled and tested in Terminal using `g++`
+
 ## 🛠️ Technologies Used
 - C++
 - GCC / G++ for compilation
