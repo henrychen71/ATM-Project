@@ -1,18 +1,21 @@
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 // Function declarations
 void showMenu();
 void checkBalance(double balance);
-void deposit(double &balance);
-void withdraw(double &balance);
+void deposit(double &balance, vector<string> &transactions);
+void withdraw(double &balance, vector<string> &transactions);
+void showHistory(vector<string> &transactions);
 
 int main() {
     string password = "1234";
     string input;
     double balance = 1000.0;
     int option;
+    vector<string> transactions;
 
     cout << "Please enter your password: ";
     cin >> input;
@@ -31,16 +34,20 @@ int main() {
         switch (option) {
             case 1:
                 checkBalance(balance);
+                transactions.push_back("Check Balance");
                 break;
             case 2:
-                deposit(balance);
+                deposit(balance,transactions);
                 break;
             case 3:
-                withdraw(balance);
+                withdraw(balance,transactions);
+
                 break;
             case 4:
                 cout << "Thank you for using the ATM. Goodbye!" << endl;
                 break;
+            case 5:
+                showHistory(transactions);
             default:
                 cout << "Invalid option. Please try again." << endl;
         }
@@ -55,6 +62,7 @@ void showMenu() {
     cout << "2. Deposit" << endl;
     cout << "3. Withdraw" << endl;
     cout << "4. Exit" << endl;
+    cout << "5. View transaction history" << endl;
     cout << "Please select an option: ";
 }
 
@@ -62,7 +70,7 @@ void checkBalance(double balance) {
     cout << "Your current balance is: $" << balance << endl;
 }
 
-void deposit(double &balance) {
+void deposit(double &balance, vector<string> &transactions) {
     double amount;
     cout << "Enter amount to deposit: ";
     cin >> amount;
@@ -73,9 +81,10 @@ void deposit(double &balance) {
     } else {
         cout << "Invalid amount." << endl;
     }
+    transactions.push_back("Deposited $" +to_string(amount));
 }
 
-void withdraw(double &balance) {
+void withdraw(double &balance, vector<string> &transactions) {
     double amount;
     cout << "Enter amount to withdraw: ";
     cin >> amount;
@@ -85,5 +94,18 @@ void withdraw(double &balance) {
         cout << "Withdrawal successful. New balance: $" << balance << endl;
     } else {
         cout << "Invalid amount or insufficient funds." << endl;
+    }
+    transactions.push_back("Withdrew $" +to_string(amount));
+}
+
+
+void showHistory(vector<string> &transactions){
+
+    if(transactions.empty()){
+        cout << "No transactions yet" <<endl;
+    }else{
+        for(const string entry :transactions){
+            cout <<"- " << entry << endl;
+        }
     }
 }
