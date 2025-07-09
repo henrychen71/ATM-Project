@@ -27,13 +27,20 @@ A simple console-based ATM simulation written in C++.
 - Improved code formatting and fixed typos
 - Compiled and tested in Terminal using `g++`
 
-🟩 ### Day 3
-🟩 - Introduced transaction history using `vector<string>`
-🟩 - Logged user actions: check balance, deposit, withdraw
-🟩 - Used `push_back()` to append transactions
-🟩 - Discussed passing `vector<string>&` to functions
-🟩 - Reviewed C++ reference syntax (`&variable`)
-🟩 - Tested transaction recording and ensured correct looping in menu
+### Day 3
+- Introduced transaction history using `vector<string>`
+- Logged user actions: check balance, deposit, withdraw
+- Used `push_back()` to append transactions
+- Passed `vector<string>&` to functions to keep track of history
+- Reviewed and practiced C++ reference syntax (`&variable`)
+- Tested transaction recording and ensured correct looping behavior
+
+### Day 4
+- Added input validation with `getValidOption()` and `getValidAmount()`
+- Used `cin.clear()` and `cin.ignore()` to handle invalid user inputs
+- Prevented program from crashing on non-numeric input
+- Improved user experience with clear error messages
+- Enabled C++11 support to suppress compiler warning for range-based loop
 
 ## 🛠️ Technologies Used
 - C++
@@ -42,5 +49,5 @@ A simple console-based ATM simulation written in C++.
 
 ## 🔧 How to Run
 ```bash
-g++ main.cpp -o atm
+g++ main.cpp -o atm -std=c++11
 ./atm
