@@ -9,6 +9,8 @@ void checkBalance(double balance);
 void deposit(double &balance, vector<string> &transactions);
 void withdraw(double &balance, vector<string> &transactions);
 void showHistory(vector<string> &transactions);
+int getValidOption();
+double getValidAmount();
 
 int main() {
     string password = "1234";
@@ -29,7 +31,8 @@ int main() {
 
     do {
         showMenu();
-        cin >> option;
+        //cin >> option;
+        option = getValidOption();
 
         switch (option) {
             case 1:
@@ -48,6 +51,7 @@ int main() {
                 break;
             case 5:
                 showHistory(transactions);
+                break;
             default:
                 cout << "Invalid option. Please try again." << endl;
         }
@@ -71,10 +75,10 @@ void checkBalance(double balance) {
 }
 
 void deposit(double &balance, vector<string> &transactions) {
-    double amount;
-    cout << "Enter amount to deposit: ";
-    cin >> amount;
-
+    //  double amount;
+    //cout << "Enter amount to deposit: ";//
+    //cin >> amount;
+    double amount = getValidAmount();
     if (amount > 0) {
         balance += amount;
         cout << "Deposit successful. New balance: $" << balance << endl;
@@ -85,9 +89,11 @@ void deposit(double &balance, vector<string> &transactions) {
 }
 
 void withdraw(double &balance, vector<string> &transactions) {
-    double amount;
-    cout << "Enter amount to withdraw: ";
-    cin >> amount;
+    //double amount;
+    //cout << "Enter amount to withdraw: ";
+    //cin >> amount;
+
+    double amount = getValidAmount();
 
     if (amount > 0 && amount <= balance) {
         balance -= amount;
@@ -108,4 +114,33 @@ void showHistory(vector<string> &transactions){
             cout <<"- " << entry << endl;
         }
     }
+}
+
+int getValidOption(){    //valid option
+    int option;
+    while(true){
+        cout <<"Please select an option (1-5): " << endl;
+        if(cin>>option&&option>=1&&option<=5){
+            break;
+        }else{
+            cout <<"Invalid input. Please enter a number between 1 and 5. " << endl;
+            cin.clear();//clean error
+            cin.ignore(numeric_limits<streamsize>::max(),'\n'); //ignore error enter
+        }
+    }
+    return option;
+}
+double getValidAmount(){ //valid amount
+    double amount;
+    while(true){
+        cout <<"Please enter amount: " << endl;
+        if(cin>>amount&&amount >0){
+            break;
+        }else{
+            cout <<"Invalid amount. Please enter a positive number."  << endl;
+            cin.clear(); // clean error
+            cin.ignore(numeric_limits<streamsize>::max(),'\n'); //ignore error enter
+        }
+    }
+    return amount;
 }
