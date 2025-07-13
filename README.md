@@ -2,24 +2,19 @@
 
 A simple console-based ATM simulation written in C++.
 
----
-
 ## ✅ Features (in progress)
-
-- [x] User login with password verification  
-- [x] View account balance  
-- [x] Deposit funds  
-- [x] Withdraw funds  
-- [x] Transaction history  
-- [x] Multi-user support  
-- [ ] File-based transaction history persistence  
-
----
+- [x] User login with password verification
+- [x] View account balance
+- [x] Deposit funds
+- [x] Withdraw funds
+- [x] Transaction history
+- [x] Multi-user support
+- [ ] Save transaction history to file (planned)
 
 ## 📅 Development Log
 
 ### Day 1
-- Set up project folder and `main.cpp`
+- Set up project folder and main.cpp
 - Implemented simple login system with password check
 - Compiled and tested successfully
 - Uploaded initial version to GitHub
@@ -46,7 +41,7 @@ A simple console-based ATM simulation written in C++.
 - Used `cin.clear()` and `cin.ignore()` to handle invalid user inputs
 - Prevented program from crashing on non-numeric input
 - Improved user experience with clear error messages
-- Enabled C++11 support to suppress compiler warnings
+- Enabled C++11 support to suppress compiler warnings for range-based loops
 
 ### Day 5
 - Refactored user login system to support multiple users
@@ -54,26 +49,22 @@ A simple console-based ATM simulation written in C++.
 - Implemented `login()` function returning pointer to the logged-in user
 - Modified functions to accept `User*` and operate on the logged-in user’s data
 - Handled login attempts with a maximum of 3 tries and proper error messages
-- Cleaned up `main()` to integrate new login logic and per-user transactions
+- Cleaned up `main()` to integrate new login and per-user transactions
 
 ### Day 6
-- Implemented file-based user data loading and saving via `users.txt`
 - Replaced hardcoded users with file input using `ifstream`
-- Parsed each line to extract username, password, and balance using `substr()` and `find()`
-- Loaded user data into a `vector<User>` at the start of the program
-- Used `ofstream` to write back updated user data at program exit
-- Ensured data persistence for balances after deposit/withdraw
-- Prepared structure for future transaction file saving
+- Parsed each line of `users.txt` to populate `vector<User>`
+- Used `substr()` and `find()` to split CSV-style data (name,password,balance)
+- Used `stod()` to convert balance from string to `double`
+- At program end, wrote updated user data back to `users.txt` using `ofstream`
+- Ensured balance changes (deposit/withdraw) persist across sessions
 
 ---
 
 ## 🛠️ Technologies Used
-
 - C++
 - GCC / G++ for compilation
 - Visual Studio Code
-
----
 
 ## 🔧 How to Run
 
@@ -98,9 +89,12 @@ Enter your password
 Please select an option: 1
 Your current balance is: $1000
 
-
 ATM_Project/
 ├── main.cpp         # Main program source code
-├── users.txt        # File storing user login and balance data
-└── README.md        # Project documentation
+├── README.md        # Project documentation
+└── users.txt        # User data file (username,password,balance)
 
+
+alice,1111,1000
+bob,2222,800
+charlie,3333,1200
