@@ -1,9 +1,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 using namespace std;
 
-struct User{
+// User struct
+struct User {
     string username;
     string password;
     double balance;
@@ -12,35 +14,35 @@ struct User{
 
 // Function declarations
 void showMenu();
-void checkBalance(User * user);
-void deposit(User * user);
-void withdraw(User * user);
-void showHistory(User * user);
+void checkBalance(User* user);
+void deposit(User* user);
+void withdraw(User* user);
+void showHistory(User* user);
 int getValidOption();
 double getValidAmount();
-User *login(vector<User> &users); //return correct username point
+User* login(vector<User>& users);
+void loadUsersFromFile(vector<User>& users, const string& filename);
+void saveUsersToFile(const vector<User>& users, const string& filename);
 
+// Main function
 int main() {
+    vector<User> users;
+    const string filename = "users.txt";
 
-    vector<User> users{
-        {"alice","1111",1000.0,{}},
-        {"bob","2222",800.0,{}},
-        {"charlie","3333",1200.0,{}}
-    };
+    // Load users from file
+    loadUsersFromFile(users, filename);
 
-
+    // User login
     User* currentUser = login(users);
-    if(currentUser == nullptr){
-
-        cout <<"Login failed. exiting program." << endl;
+    if (currentUser == nullptr) {
+        cout << "Login failed. Exiting program." << endl;
         return 0;
     }
 
-
-        int option;
+    // ATM menu loop
+    int option;
     do {
         showMenu();
-        //cin >> option;
         option = getValidOption();
 
         switch (option) {
@@ -53,7 +55,6 @@ int main() {
                 break;
             case 3:
                 withdraw(currentUser);
-
                 break;
             case 4:
                 cout << "Thank you for using the ATM. Goodbye!" << endl;
@@ -66,9 +67,13 @@ int main() {
         }
     } while (option != 4);
 
+    // Save users to file
+    saveUsersToFile(users, filename);
+
     return 0;
 }
 
+// Show ATM menu
 void showMenu() {
     cout << "\n=== ATM Menu ===" << endl;
     cout << "1. Check balance" << endl;
@@ -79,14 +84,13 @@ void showMenu() {
     cout << "Please select an option: ";
 }
 
-void checkBalance(User * user) {
+// Check balance
+void checkBalance(User* user) {
     cout << "Your current balance is: $" << user->balance << endl;
 }
 
-void deposit(User * user) {
-    //  double amount;
-    //cout << "Enter amount to deposit: ";//
-    //cin >> amount;
+// Deposit money
+void deposit(User* user) {
     double amount = getValidAmount();
     if (amount > 0) {
         user->balance += amount;
@@ -94,101 +98,123 @@ void deposit(User * user) {
     } else {
         cout << "Invalid amount." << endl;
     }
-    user->transactions.push_back("Deposited $" +to_string(amount));
+    user->transactions.push_back("Deposited $" + to_string(amount));
 }
 
-void withdraw(User * user) {
-    //double amount;
-    //cout << "Enter amount to withdraw: ";
-    //cin >> amount;
-
+// Withdraw money
+void withdraw(User* user) {
     double amount = getValidAmount();
-
     if (amount > 0 && amount <= user->balance) {
         user->balance -= amount;
         cout << "Withdrawal successful. New balance: $" << user->balance << endl;
     } else {
         cout << "Invalid amount or insufficient funds." << endl;
     }
-    user->transactions.push_back("Withdrew $" +to_string(amount));
+    user->transactions.push_back("Withdrew $" + to_string(amount));
 }
 
-
-void showHistory(User * user){
-
-    if(user->transactions.empty()){
-        cout << "No transactions yet" <<endl;
-    }else{
-        for(const string &entry :user->transactions){
-            cout <<"- " << entry << endl;
+// Show transaction history
+void showHistory(User* user) {
+    if (user->transactions.empty()) {
+        cout << "No transactions yet." << endl;
+    } else {
+        for (const string& entry : user->transactions) {
+            cout << "- " << entry << endl;
         }
     }
 }
 
-int getValidOption(){    //valid option
+// Get a valid menu option
+int getValidOption() {
     int option;
-    while(true){
-        cout <<"Please select an option (1-5): " << endl;
-        if(cin>>option&&option>=1&&option<=5){
+    while (true) {
+        if (cin >> option && option >= 1 && option <= 5) {
             break;
-        }else{
-            cout <<"Invalid input. Please enter a number between 1 and 5. " << endl;
-            cin.clear();//clean error
-            cin.ignore(numeric_limits<streamsize>::max(),'\n'); //ignore error enter
+        } else {
+            cout << "Invalid input. Enter a number between 1 and 5." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
     return option;
 }
-double getValidAmount(){ //valid amount
+
+// Get a valid money amount
+double getValidAmount() {
     double amount;
-    while(true){
-        cout <<"Please enter amount: " << endl;
-        if(cin>>amount&&amount >0){
+    while (true) {
+        cout << "Please enter amount: ";
+        if (cin >> amount && amount > 0) {
             break;
-        }else{
-            cout <<"Invalid amount. Please enter a positive number."  << endl;
-            cin.clear(); // clean error
-            cin.ignore(numeric_limits<streamsize>::max(),'\n'); //ignore error enter
+        } else {
+            cout << "Invalid amount. Please enter a positive number." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
     return amount;
 }
 
-User *login(vector<User> &users){   //return login username information
+// Login system
+User* login(vector<User>& users) {
+    string typeName, typePassword;
+    int logTime = 0;
 
-    string typeName;
-    string typePassword;
-    int logTime =0;
-
-
-    while(logTime <3){  // login only 3 time allowed 
-
- 
-        cout <<"Enter your name" << endl;
+    while (logTime < 3) {
+        cout << "Enter your name: ";
         cin >> typeName;
-        cout <<"Enter your password" << endl;
+        cout << "Enter your password: ";
         cin >> typePassword;
         bool foundUser = false;
 
-    for (auto &user : users) {
-        if (typeName == user.username) {
-            foundUser = true;
-            if (typePassword == user.password) {
-                return &user;
-            } else {
-                cout << "Incorrect password." << endl;
-                break;
+        for (auto& user : users) {
+            if (typeName == user.username) {
+                foundUser = true;
+                if (typePassword == user.password) {
+                    return &user;
+                } else {
+                    cout << "Incorrect password." << endl;
+                    break;
+                }
             }
         }
-    }
-    
-    if (!foundUser) {
-        cout << "Username not found." << endl;
-        }
-        logTime++;
-        
-    }
 
+        if (!foundUser) {
+            cout << "Username not found." << endl;
+        }
+
+        logTime++;
+    }
 
     return nullptr;
+}
+
+// Load users from file
+void loadUsersFromFile(vector<User>& users, const string& filename) {
+    ifstream file(filename);
+    string line;
+
+    while (getline(file, line)) {
+        size_t pos1 = line.find(',');
+        size_t pos2 = line.find(',', pos1 + 1);
+
+        string name = line.substr(0, pos1);
+        string pass = line.substr(pos1 + 1, pos2 - pos1 - 1);
+        double bal = stod(line.substr(pos2 + 1));
+
+        users.push_back({name, pass, bal, {}});
+    }
+
+    file.close();
+}
+
+// Save users to file
+void saveUsersToFile(const vector<User>& users, const string& filename) {
+    ofstream outfile(filename);
+
+    for (const User& user : users) {
+        outfile << user.username << "," << user.password << "," << user.balance << endl;
+    }
+
+    outfile.close();
 }
