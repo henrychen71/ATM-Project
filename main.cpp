@@ -23,6 +23,8 @@ double getValidAmount();
 User* login(vector<User>& users);
 void loadUsersFromFile(vector<User>& users, const string& filename);
 void saveUsersToFile(const vector<User>& users, const string& filename);
+void loadTransactions(User & user); // load transactions history
+void saveTransactions(const User & user); // save transactions history
 
 // Main function
 int main() {
@@ -38,6 +40,11 @@ int main() {
         cout << "Login failed. Exiting program." << endl;
         return 0;
     }
+
+    loadTransactions(*currentUser);// load current user transacton
+
+
+
 
     // ATM menu loop
     int option;
@@ -69,6 +76,8 @@ int main() {
 
     // Save users to file
     saveUsersToFile(users, filename);
+
+    saveTransactions(*currentUser); //save current user transaction to text
 
     return 0;
 }
@@ -216,5 +225,35 @@ void saveUsersToFile(const vector<User>& users, const string& filename) {
         outfile << user.username << "," << user.password << "," << user.balance << endl;
     }
 
+    outfile.close();
+}
+
+// Load transactions from user-specific file
+void loadTransactions(User & user){
+    ifstream infile(user.username+"_transaction.txt");
+
+    //if file doesn't exist , just return without anything
+
+    if(!infile.is_open()){
+        return;
+    }
+
+    string line;
+    while (getline(infile,line)){
+
+        user.transactions.push_back(line);
+
+    }
+    infile.close();
+}
+
+// Save transactions to user-specific file
+void saveTransactions(const User & user){
+    ofstream outfile(user.username+"_transaction.txt");
+
+    for(const string & entry: user.transactions){
+
+        outfile << entry << endl;
+    }
     outfile.close();
 }

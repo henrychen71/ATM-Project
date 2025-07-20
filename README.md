@@ -9,12 +9,12 @@ A simple console-based ATM simulation written in C++.
 - [x] Withdraw funds
 - [x] Transaction history
 - [x] Multi-user support
-- [ ] Save transaction history to file (planned)
+- [x] Save transaction history to file (implemented)
 
 ## 📅 Development Log
 
 ### Day 1
-- Set up project folder and main.cpp
+- Set up project folder and `main.cpp`
 - Implemented simple login system with password check
 - Compiled and tested successfully
 - Uploaded initial version to GitHub
@@ -54,10 +54,16 @@ A simple console-based ATM simulation written in C++.
 ### Day 6
 - Replaced hardcoded users with file input using `ifstream`
 - Parsed each line of `users.txt` to populate `vector<User>`
-- Used `substr()` and `find()` to split CSV-style data (name,password,balance)
+- Used `substr()` and `find()` to split CSV-style data (username,password,balance)
 - Used `stod()` to convert balance from string to `double`
 - At program end, wrote updated user data back to `users.txt` using `ofstream`
 - Ensured balance changes (deposit/withdraw) persist across sessions
+
+### Day 7
+- Implemented per-user transaction history saved in separate text files
+- Loaded transaction history from `<username>_transaction.txt` at login
+- Saved transaction history to file on program exit
+- Improved data persistence and user experience
 
 ---
 
@@ -75,10 +81,12 @@ g++ main.cpp -o atm -std=c++11
 # Run the program
 ./atm
 
-Enter your name
-alice
-Enter your password
-1111
+Example Interaction
+pgsql
+複製
+編輯
+Enter your name: alice
+Enter your password: 1111
 
 === ATM Menu ===
 1. Check balance
@@ -88,13 +96,20 @@ Enter your password
 5. View transaction history
 Please select an option: 1
 Your current balance is: $1000
-
+📂 Project Structure
+bash
+複製
+編輯
 ATM_Project/
-├── main.cpp         # Main program source code
-├── README.md        # Project documentation
-└── users.txt        # User data file (username,password,balance)
-
-
+├── main.cpp                 # Main program source code
+├── README.md                # Project documentation
+├── users.txt                # User data file (username,password,balance)
+├── alice_transaction.txt    # Transaction history for user alice
+├── bob_transaction.txt      # Transaction history for user bob
+└── charlie_transaction.txt  # Transaction history for user charlie
+📄 Sample users.txt content
+複製
+編輯
 alice,1111,1000
 bob,2222,800
 charlie,3333,1200
