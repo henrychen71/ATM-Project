@@ -83,8 +83,7 @@ g++ main.cpp -o atm -std=c++11
 
 Example Interaction
 pgsql
-複製
-編輯
+
 Enter your name: alice
 Enter your password: 1111
 
@@ -98,8 +97,7 @@ Please select an option: 1
 Your current balance is: $1000
 📂 Project Structure
 bash
-複製
-編輯
+
 ATM_Project/
 ├── main.cpp                 # Main program source code
 ├── README.md                # Project documentation
@@ -108,8 +106,7 @@ ATM_Project/
 ├── bob_transaction.txt      # Transaction history for user bob
 └── charlie_transaction.txt  # Transaction history for user charlie
 📄 Sample users.txt content
-複製
-編輯
+
 alice,1111,1000
 bob,2222,800
 charlie,3333,1200
