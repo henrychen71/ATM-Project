@@ -2,6 +2,9 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <ctime>
+#include <iomanip>
+#include <sstream> // for string stream
 using namespace std;
 
 // User struct
@@ -25,6 +28,7 @@ void loadUsersFromFile(vector<User>& users, const string& filename);
 void saveUsersToFile(const vector<User>& users, const string& filename);
 void loadTransactions(User & user); // load transactions history
 void saveTransactions(const User & user); // save transactions history
+string getCurrentDateTime();// function to get current date and time as a string
 
 // Main function
 int main() {
@@ -95,6 +99,7 @@ void showMenu() {
 
 // Check balance
 void checkBalance(User* user) {
+    cout << fixed << setprecision(2);
     cout << "Your current balance is: $" << user->balance << endl;
 }
 
@@ -103,11 +108,14 @@ void deposit(User* user) {
     double amount = getValidAmount();
     if (amount > 0) {
         user->balance += amount;
+        cout << fixed << setprecision(2);
         cout << "Deposit successful. New balance: $" << user->balance << endl;
     } else {
         cout << "Invalid amount." << endl;
     }
-    user->transactions.push_back("Deposited $" + to_string(amount));
+    ostringstream oss;
+    oss << fixed << setprecision(2) << amount;
+    user->transactions.push_back("Deposited $" + oss.str()+ " " +getCurrentDateTime());
 }
 
 // Withdraw money
@@ -115,11 +123,14 @@ void withdraw(User* user) {
     double amount = getValidAmount();
     if (amount > 0 && amount <= user->balance) {
         user->balance -= amount;
+        cout << fixed << setprecision(2);
         cout << "Withdrawal successful. New balance: $" << user->balance << endl;
     } else {
         cout << "Invalid amount or insufficient funds." << endl;
     }
-    user->transactions.push_back("Withdrew $" + to_string(amount));
+    ostringstream oss;
+    oss << fixed << setprecision(2) << amount;
+    user->transactions.push_back("Withdrew $" + oss.str()+ " " +getCurrentDateTime());
 }
 
 // Show transaction history
@@ -256,4 +267,17 @@ void saveTransactions(const User & user){
         outfile << entry << endl;
     }
     outfile.close();
+}
+
+//function to get current date and time as a string
+string getCurrentDateTime(){
+    time_t now = time(nullptr);        //Get current time
+    tm * localTime = localtime(& now); //Convert to local time(struct tm)
+
+    ostringstream oss;                 //Create output string stream
+
+    oss << put_time(localTime, "%Y-%m-%d %H:%M:%S");//Format date and time
+
+    return oss.str();                  //Return as string
+
 }
